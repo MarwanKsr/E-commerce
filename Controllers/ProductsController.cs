@@ -9,9 +9,10 @@ using e_commerce.Areas.Identity.Data;
 using e_commerce.Models;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace e_commerce.Controllers
 {
-    [Authorize(Roles = "Vendor,Customer")]
+    [Authorize(Roles ="Vendor,Customer")]
     public class ProductsController : Controller
     {
         private readonly E_commerceDbContext _context;
@@ -19,10 +20,10 @@ namespace e_commerce.Controllers
         public ProductsController(E_commerceDbContext context)
         {
             _context = context;
+            
         }
 
-        // GET: Products 
-        
+        // GET: Products
         public async Task<IActionResult> Index()
         {
               return _context.products != null ? 
@@ -48,10 +49,11 @@ namespace e_commerce.Controllers
             return View(product);
         }
 
+        [Authorize(Roles ="Vendor")]
         // GET: Products/Create
-        [Authorize(Roles = "Vendor")]
         public IActionResult Create()
         {
+            GetCategoryList();
             return View();
         }
 
@@ -61,10 +63,16 @@ namespace e_commerce.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Vendor")]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,IsActive,CreatedDate,Description,Price,Stock")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Description,Price,Stock")] Product product)
         {
+          
             if (ModelState.IsValid)
             {
+                var CategoryNameById = _context.categories.FirstOrDefault(c => c.Id == product.CategoryId);
+                if (CategoryNameById != null)
+                {
+                    product.CategoryName = CategoryNameById.Name;
+                }
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,6 +94,7 @@ namespace e_commerce.Controllers
             {
                 return NotFound();
             }
+            GetCategoryList();
             return View(product);
         }
 
@@ -104,6 +113,11 @@ namespace e_commerce.Controllers
 
             if (ModelState.IsValid)
             {
+                var CategoryNameById = _context.categories.FirstOrDefault(c => c.Id == product.CategoryId);
+                if (CategoryNameById != null)
+                {
+                    product.CategoryName = CategoryNameById.Name;
+                }
                 try
                 {
                     _context.Update(product);
@@ -167,6 +181,13 @@ namespace e_commerce.Controllers
         private bool ProductExists(int id)
         {
           return (_context.products?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+
+        void GetCategoryList()
+        {
+            var CategoryList = _context.categories.ToList();
+            ViewBag.CategoryList = new SelectList(CategoryList,"Id","Name");
         }
     }
 }

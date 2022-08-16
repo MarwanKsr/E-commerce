@@ -1,17 +1,23 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using e_commerce.Areas.Identity.Data;
+
+
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("E_commerceDbContextConnection") ?? throw new InvalidOperationException("Connection string 'E_commerceDbContextConnection' not found.");
 
 builder.Services.AddDbContext<E_commerceDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+
+
 builder.Services.AddDefaultIdentity<E_commerceUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<E_commerceDbContext>();
 
 AddAuthrozitionPolitics();
+
+
 
 
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_commerce.Areas.Identity.Data;
 
@@ -11,9 +12,10 @@ using e_commerce.Areas.Identity.Data;
 namespace e_commerce.Migrations
 {
     [DbContext(typeof(E_commerceDbContext))]
-    partial class E_commerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220815095431_categoryModelIsAdded")]
+    partial class categoryModelIsAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,10 +125,6 @@ namespace e_commerce.Migrations
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
