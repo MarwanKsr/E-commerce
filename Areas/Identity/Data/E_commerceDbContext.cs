@@ -3,7 +3,6 @@ using e_commerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using e_commerce.ViewModels;
 
 namespace e_commerce.Areas.Identity.Data;
 
